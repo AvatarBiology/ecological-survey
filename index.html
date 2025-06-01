@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生物族群調查方法 - 學習任務</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-size: 14px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            border-color: white;
+        }
+
+        .content-area {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            min-height: 600px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .method-animation {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+        }
+
+        .animation-box {
+            width: 300px;
+            height: 200px;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            position: relative;
+            background: linear-gradient(45deg, #f0f8ff, #e6f3ff);
+            overflow: hidden;
+        }
+
+        .animation-title {
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .quadrat {
+            width: 80px;
+            height: 80px;
+            border: 2px dashed #667eea;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+        }
+
+        .animals {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            animation: move 3s infinite;
+        }
+
+        .animals:nth-child(2) { top: 30%; left: 20%; animation-delay: 0.5s; }
+        .animals:nth-child(3) { top: 60%; left: 70%; animation-delay: 1s; }
+        .animals:nth-child(4) { top: 80%; left: 30%; animation-delay: 1.5s; }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes move {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(20px, -10px); }
+            50% { transform: translate(-10px, 15px); }
+            75% { transform: translate(15px, 5px); }
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .example-box {
+            background: #f8f9ff;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .quiz-container {
+            text-align: center;
+        }
+
+        .method-selector {
+            margin: 20px 0;
+        }
+
+        .method-btn {
+            padding: 15px 30px;
+            margin: 0 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .method-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #f0f0f0;
+        }
+
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            padding: 15px;
+            background: #f8f9ff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f0f8ff;
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option-btn.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        .next-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        .certificate {
+            text-align: center;
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border: 10px solid #d63031;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .certificate h2 {
+            color: #d63031;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .certificate-content {
+            font-size: 18px;
+            line-height: 2;
+            color: #2d3436;
+        }
+
+        .certificate-decoration {
+            font-size: 3em;
+            color: #d63031;
+            margin: 20px 0;
+        }
+
+        .footer {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .method-animation {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .animation-box {
+                margin-bottom: 20px;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                justify-content: center;
+            }
+            
+            .tab-btn {
+                font-size: 12px;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔬 生物族群調查方法 - 學習任務</h1>
+            <p>探索樣區法與捉放法的奧秘</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('intro')">方法介紹與比較</button>
+            <button class="tab-btn" onclick="showTab('calculation')">計算方式說明</button>
+            <button class="tab-btn" onclick="showTab('practice')">應用題練習</button>
+            <button class="tab-btn" onclick="showTab('challenge')">加分挑戰</button>
+            <button class="tab-btn" onclick="showTab('certificate')">取得證書</button>
+        </div>
+
+        <div class="content-area">
+            <!-- 方法介紹與比較 -->
+            <div id="intro" class="tab-content active">
+                <h2>🌱 樣區法與捉放法介紹</h2>
+                
+                <div class="method-animation">
+                    <div>
+                        <div class="animation-title">樣區法示意圖</div>
+                        <div class="animation-box">
+                            <div class="quadrat"></div>
+                            <div class="animals"></div>
+                            <div class="animals"></div>
+                            <div class="animals"></div>
+                            <div class="animals"></div>
+                        </div>
+                        <p style="text-align: center; margin-top: 10px;">在固定範圍內計算生物個體數量</p>
+                    </div>
+                    
+                    <div>
+                        <div class="animation-title">捉放法示意圖</div>
+                        <div class="animation-box">
+                            <div style="position: absolute; top: 20%; left: 20%; font-size: 20px;">🐛</div>
+                            <div style="position: absolute; top: 40%; left: 60%; font-size: 20px;">🐛</div>
+                            <div style="position: absolute; top: 70%; left: 30%; font-size: 20px; animation: catch 2s infinite;">🏷️🐛</div>
+                            <div style="position: absolute; top: 30%; left: 80%; font-size: 20px;">🐛</div>
+                        </div>
+                        <p style="text-align: center; margin-top: 10px;">捕捉→標記→放回→再捕捉</p>
+                    </div>
+                </div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>比較項目</th>
+                            <th>樣區法</th>
+                            <th>捉放法</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>適用對象</strong></td>
+                            <td>不會移動或移動緩慢的生物<br>（如：植物、貝類、海葵）</td>
+                            <td>會移動的動物<br>（如：魚類、鳥類、昆蟲）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>調查方式</strong></td>
+                            <td>在固定大小的正方形範圍內<br>直接計算生物個體數量</td>
+                            <td>先捕捉一部分動物並標記<br>放回後再次捕捉計算比例</td>
+                        </tr>
+                        <tr>
+                            <td><strong>計算原理</strong></td>
+                            <td>利用比例推算<br>整個區域的生物密度</td>
+                            <td>利用標記個體的比例<br>推算總族群數量</td>
+                        </tr>
+                        <tr>
+                            <td><strong>優點</strong></td>
+                            <td>操作簡單、準確度高<br>適合大範圍調查</td>
+                            <td>不受地形限制<br>適合調查會移動的動物</td>
+                        </tr>
+                        <tr>
+                            <td><strong>缺點</strong></td>
+                            <td>只適用於不會移動的生物<br>需要多次取樣</td>
+                            <td>需要多次捕捉<br>標記可能影響動物行為</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 計算方式說明 -->
+            <div id="calculation" class="tab-content">
+                <h2>🧮 計算方式說明</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                    <div>
+                        <h3 style="color: #667eea; margin-bottom: 20px;">樣區法計算</h3>
+                        <div class="formula-box">
+                            族群密度 = 樣區內個體數 ÷ 樣區面積
+                        </div>
+                        <div class="formula-box">
+                            總個體數 = 族群密度 × 總面積
+                        </div>
+                        
+                        <div class="example-box">
+                            <h4>📝 範例：</h4>
+                            <p><strong>題目：</strong>在一個 2m × 2m 的樣區中發現 8 隻蝸牛，若整個調查區域為 100m × 100m，估計總共有多少隻蝸牛？</p>
+                            
+                            <p><strong>解題步驟：</strong></p>
+                            <p>1. 樣區面積 = 2 × 2 = 4 平方公尺</p>
+                            <p>2. 族群密度 = 8 ÷ 4 = 2 隻/平方公尺</p>
+                            <p>3. 總面積 = 100 × 100 = 10,000 平方公尺</p>
+                            <p>4. 總個體數 = 2 × 10,000 = 20,000 隻</p>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 style="color: #667eea; margin-bottom: 20px;">捉放法計算</h3>
+                        <div class="formula-box">
+                            第一次標記數 ÷ 總族群數 = 第二次捕獲的標記數 ÷ 第二次捕獲總數
+                        </div>
+                        <div class="formula-box">
+                            總族群數 = (第一次標記數 × 第二次捕獲總數) ÷ 第二次捕獲的標記數
+                        </div>
+                        
+                        <div class="example-box">
+                            <h4>📝 範例：</h4>
+                            <p><strong>題目：</strong>第一次捕獲並標記 50 隻鳥，放回後第二次捕獲 40 隻鳥，其中有 5 隻是有標記的，估計鳥類總數？</p>
+                            
+                            <p><strong>解題步驟：</strong></p>
+                            <p>1. 第一次標記數 = 50 隻</p>
+                            <p>2. 第二次捕獲總數 = 40 隻</p>
+                            <p>3. 第二次捕獲的標記數 = 5 隻</p>
+                            <p>4. 總族群數 = (50 × 40) ÷ 5 = 2000 ÷ 5 = 400 隻</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 應用題練習 -->
+            <div id="practice" class="tab-content">
+                <h2>📚 應用題練習</h2>
+                <div id="practice-content">
+                    <div class="quiz-container">
+                        <p>選擇你想練習的方法：</p>
+                        <div class="method-selector">
+                            <button class="method-btn" onclick="startQuiz('quadrat')">樣區法練習</button>
+                            <button class="method-btn" onclick="startQuiz('capture')">捉放法練習</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 加分挑戰 -->
+            <div id="challenge" class="tab-content">
+                <h2>🏆 加分挑戰</h2>
+                <div id="challenge-content">
+                    <div class="quiz-container">
+                        <p>準備接受更高難度的挑戰嗎？</p>
+                        <button class="method-btn" onclick="startChallenge()">開始挑戰</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 取得證書 -->
+            <div id="certificate" class="tab-content">
+                <h2>🎓 學習證書</h2>
+                <div class="certificate">
+                    <div class="certificate-decoration">🏆</div>
+                    <h2>學習完成證書</h2>
+                    <div class="certificate-content">
+                        <p><strong>恭喜完成生物族群調查方法學習任務！</strong></p>
+                        <p>樣區法練習：<span id="quadrat-score">0</span>/5 題正確</p>
+                        <p>捉放法練習：<span id="capture-score">0</span>/5 題正確</p>
+                        <p>加分挑戰：<span id="challenge-score">0</span>/5 題正確</p>
+                        <p><strong>總正確題數：<span id="total-score">0</span>/15 題</strong></p>
+                        <p style="margin-top: 20px; font-size: 16px;">頒發日期：<span id="certificate-date"></span></p>
+                    </div>
+                    <div class="certificate-decoration">⭐</div>
+                </div>
+                <p style="text-align: center; margin-top: 20px; font-size: 16px; color: #666;">
+                    💡 將證書畫面進行截圖，進行作業上傳；若想要挑戰滿分，也可以多做幾次題目練習呦！
+                </p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Copyright © 2025 by Avatar Biology</p>
+        </div>
+    </div>
+
+    <script>
+        // 全域變數
+        let scores = {
+            quadrat: 0,
+            capture: 0,
+            challenge: 0
+        };
+        
+        let currentQuiz = null;
+        let currentQuestion = 0;
+        let answered = false;
+
+        // 題目資料
+        const questions = {
+            quadrat: [
+                {
+                    question: "在一個 1m × 1m 的樣區中發現 6 株小草，若整個草地面積為 50m × 50m，估計草地上總共有多少株小草？",
+                    options: ["150株", "15,000株", "1,500株", "30,000株"],
+                    correct: 1,
+                    explanation: "樣區面積 = 1×1 = 1平方公尺<br>族群密度 = 6÷1 = 6株/平方公尺<br>總面積 = 50×50 = 2,500平方公尺<br>總個體數 = 6×2,500 = 15,000株"
+                },
+                {
+                    question: "研究人員在 2m × 3m 的樣區中數到 18 隻螞蟻，若調查區域為 20m × 15m，估計螞蟻總數？",
+                    options: ["540隻", "900隻", "1,800隻", "360隻"],
+                    correct: 1,
+                    explanation: "樣區面積 = 2×3 = 6平方公尺<br>族群密度 = 18÷6 = 3隻/平方公尺<br>總面積 = 20×15 = 300平方公尺<br>總個體數 = 3×300 = 900隻"
+                },
+                {
+                    question: "在 0.5m × 0.5m 的樣區中發現 2 朵花，若花園面積為 10m × 8m，估計花朵總數？",
+                    options: ["160朵", "320朵", "640朵", "80朵"],
+                    correct: 2,
+                    explanation: "樣區面積 = 0.5×0.5 = 0.25平方公尺<br>族群密度 = 2÷0.25 = 8朵/平方公尺<br>總面積 = 10×8 = 80平方公尺<br>總個體數 = 8×80 = 640朵"
+                },
+                {
+                    question: "生物學家在 4m × 4m 的樣區中計數到 32 隻蝸牛，若調查的整個區域為 40m × 30m，蝸牛總數約為多少？",
+                    options: ["2,400隻", "1,200隻", "4,800隻", "960隻"],
+                    correct: 0,
+                    explanation: "樣區面積 = 4×4 = 16平方公尺<br>族群密度 = 32÷16 = 2隻/平方公尺<br>總面積 = 40×30 = 1,200平方公尺<br>總個體數 = 2×1,200 = 2,400隻"
+                },
+                {
+                    question: "在 3m × 2m 的樣區中發現 15 棵小樹，若整個森林面積為 60m × 40m，估計小樹總數？",
+                    options: ["3,000棵", "6,000棵", "1,500棵", "4,500棵"],
+                    correct: 1,
+                    explanation: "樣區面積 = 3×2 = 6平方公尺<br>族群密度 = 15÷6 = 2.5棵/平方公尺<br>總面積 = 60×40 = 2,400平方公尺<br>總個體數 = 2.5×2,400 = 6,000棵"
+                }
+            ],
+            capture: [
+                {
+                    question: "第一次捕獲並標記 40 隻魚，放回後第二次捕獲 30 隻魚，其中 6 隻有標記，估計魚類總數？",
+                    options: ["200隻", "180隻", "240隻", "160隻"],
+                    correct: 0,
+                    explanation: "使用捉放法公式：<br>總族群數 = (第一次標記數 × 第二次捕獲總數) ÷ 第二次捕獲的標記數<br>= (40 × 30) ÷ 6 = 1,200 ÷ 6 = 200隻"
+                },
+                {
+                    question: "研究人員標記了 60 隻鳥後放回，第二次捕獲 45 隻鳥，其中 9 隻有標記，鳥類總數約為多少？",
+                    options: ["270隻", "300隻", "240隻", "360隻"],
+                    correct: 1,
+                    explanation: "使用捉放法公式：<br>總族群數 = (60 × 45) ÷ 9 = 2,700 ÷ 9 = 300隻"
+                },
+                {
+                    question: "第一次標記 25 隻蝴蝶，第二次捕獲 20 隻蝴蝶，其中 5 隻有標記，估計蝴蝶總數？",
+                    options: ["125隻", "100隻", "150隻", "75隻"],
+                    correct: 1,
+                    explanation: "使用捉放法公式：<br>總族群數 = (25 × 20) ÷ 5 = 500 ÷ 5 = 100隻"
+                },
+                {
+                    question: "生物學家標記 80 隻昆蟲，第二次捕獲 50 隻，其中 10 隻有標記，昆蟲總數約為？",
+                    options: ["400隻", "320隻", "480隻", "360隻"],
+                    correct: 0,
+                    explanation: "使用捉放法公式：<br>總族群數 = (80 × 50) ÷ 10 = 4,000 ÷ 10 = 400隻"
+                },
+                {
+                    question: "第一次捕獲標記 35 隻老鼠，第二次捕獲 28 隻老鼠，其中 7 隻有標記，老鼠總數約為？",
+                    options: ["140隻", "120隻", "160隻", "180隻"],
+                    correct: 0,
+                    explanation: "使用捉放法公式：<br>總族群數 = (35 × 28) ÷ 7 = 980 ÷ 7 = 140隻"
+                }
+            ],
+            challenge: [
+                {
+                    question: "某研究使用樣區法調查植物，在 5個 2m×2m 的樣區中分別發現 8、12、6、10、14 株植物。若總調查面積為 1000平方公尺，植物總數估計為？",
+                    options: ["2,500株", "2,000株", "3,000株", "1,500株"],
+                    correct: 0,
+                    explanation: "先算平均密度：<br>總植物數 = 8+12+6+10+14 = 50株<br>總樣區面積 = 5×(2×2) = 20平方公尺<br>平均密度 = 50÷20 = 2.5株/平方公尺<br>總個體數 = 2.5×1000 = 2,500株"
+                },
+                {
+                    question: "使用捉放法調查某動物族群，第一次標記100隻，第二次捕獲80隻其中16隻有標記。若標記動物的死亡率為10%，實際族群數約為？",
+                    options: ["556隻", "500隻", "450隻", "600隻"],
+                    correct: 0,
+                    explanation: "考慮死亡率：<br>實際存活標記數 = 100×(1-0.1) = 90隻<br>總族群數 = (90×80)÷16 = 7,200÷16 = 450隻<br>但要考慮整體死亡率影響，約為 450÷0.9 ≈ 556隻"
+                },
+                {
+                    question: "下列哪種情況最不適合使用樣區法進行調查？",
+                    options: ["調查森林中的樹木分布", "調查池塘中的魚類數量", "調查草地上的雜草密度", "調查岩石上的藤壺數量"],
+                    correct: 1,
+                    explanation: "魚類會游動，無法固定在特定範圍內計數，因此不適合用樣區法。樣區法適用於不會移動或移動緩慢的生物。"
+                },
+                {
+                    question: "某地區連續3年使用捉放法調查鳥類，第一年估計500隻，第二年600隻，第三年400隻。下列敘述何者最合理？",
+                    options: ["族群數量穩定", "可能受環境因素影響而波動", "調查方法有誤", "數據不可信"],
+                    correct: 1,
+                    explanation: "生物族群數量會受到食物供應、氣候變化、疾病、繁殖成功率等多種環境因素影響，出現年際間的波動是正常現象。"
+                },
+                {
+                    question: "研究人員想比較兩種調查方法的準確性，在同一區域同時使用樣區法和捉放法調查螃蟹。結果會如何？",
+                    options: ["兩種方法結果應該完全相同", "樣區法結果較準確", "捉放法結果較準確", "兩種方法都不適合調查螃蟹"],
+                    correct: 3,
+                    explanation: "螃蟹會移動但移動範圍有限，且容易躲藏。樣區法可能漏算隱藏個體，捉放法標記可能影響行為。更適合的方法是標記重捕法結合攝影技術。"
+                }
+            ]
+        };
+
+        // 頁籤切換功能
+        function showTab(tabName) {
+            // 隱藏所有內容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // 移除所有按鈕的active狀態
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // 顯示選中的內容和按鈕
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // 更新證書日期
+            if (tabName === 'certificate') {
+                updateCertificate();
+            }
+        }
+
+        // 開始測驗
+        function startQuiz(type) {
+            currentQuiz = type;
+            currentQuestion = 0;
+            answered = false;
+            showQuestion();
+        }
+
+        // 開始挑戰
+        function startChallenge() {
+            currentQuiz = 'challenge';
+            currentQuestion = 0;
+            answered = false;
+            showQuestion();
+        }
+
+        // 顯示題目
+        function showQuestion() {
+            const container = currentQuiz === 'challenge' ? 
+                document.getElementById('challenge-content') : 
+                document.getElementById('practice-content');
+            
+            const questionData = questions[currentQuiz][currentQuestion];
+            const progress = ((currentQuestion + 1) / questions[currentQuiz].length) * 100;
+            
+            container.innerHTML = `
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                </div>
+                <p style="text-align: center; margin-bottom: 20px;">
+                    題目 ${currentQuestion + 1} / ${questions[currentQuiz].length}
+                </p>
+                <div class="question-card">
+                    <div class="question-text">${questionData.question}</div>
+                    <div class="options">
+                        ${questionData.options.map((option, index) => 
+                            `<button class="option-btn" onclick="selectAnswer(${index})">${String.fromCharCode(65 + index)}. ${option}</button>`
+                        ).join('')}
+                    </div>
+                    <div id="feedback" class="feedback" style="display: none;"></div>
+                    <button id="next-btn" class="next-btn" style="display: none;" onclick="nextQuestion()">下一題</button>
+                </div>
+            `;
+        }
+
+        // 選擇答案
+        function selectAnswer(selectedIndex) {
+            if (answered) return;
+            
+            answered = true;
+            const questionData = questions[currentQuiz][currentQuestion];
+            const options = document.querySelectorAll('.option-btn');
+            const feedback = document.getElementById('feedback');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // 顯示正確答案
+            options.forEach((option, index) => {
+                option.style.pointerEvents = 'none';
+                if (index === questionData.correct) {
+                    option.classList.add('correct');
+                } else if (index === selectedIndex && selectedIndex !== questionData.correct) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // 顯示回饋
+            if (selectedIndex === questionData.correct) {
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `<strong>✅ 答對了！</strong><br><br><strong>解題過程：</strong><br>${questionData.explanation}`;
+                scores[currentQuiz]++;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `<strong>❌ 答錯了！</strong><br>正確答案是：${String.fromCharCode(65 + questionData.correct)}. ${questionData.options[questionData.correct]}<br><br><strong>解題過程：</strong><br>${questionData.explanation}`;
+            }
+            
+            feedback.style.display = 'block';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        // 下一題
+        function nextQuestion() {
+            currentQuestion++;
+            answered = false;
+            
+            if (currentQuestion < questions[currentQuiz].length) {
+                showQuestion();
+            } else {
+                showQuizComplete();
+            }
+        }
+
+        // 顯示測驗完成
+        function showQuizComplete() {
+            const container = currentQuiz === 'challenge' ? 
+                document.getElementById('challenge-content') : 
+                document.getElementById('practice-content');
+            
+            const score = scores[currentQuiz];
+            const total = questions[currentQuiz].length;
+            const percentage = Math.round((score / total) * 100);
+            
+            let message = '';
+            if (percentage >= 80) {
+                message = '🎉 太棒了！你已經充分掌握了這個方法！';
+            } else if (percentage >= 60) {
+                message = '👍 不錯！再多練習一下會更好！';
+            } else {
+                message = '💪 加油！建議重新複習一下計算方法！';
+            }
+
+            container.innerHTML = `
+                <div class="question-card" style="text-align: center;">
+                    <h3>測驗完成！</h3>
+                    <div style="font-size: 3em; margin: 20px 0;">
+                        ${percentage >= 80 ? '🏆' : percentage >= 60 ? '👍' : '💪'}
+                    </div>
+                    <p style="font-size: 1.5em; margin: 20px 0;">
+                        得分：${score} / ${total} 題 (${percentage}%)
+                    </p>
+                    <p style="margin: 20px 0;">${message}</p>
+                    <div style="margin-top: 30px;">
+                        <button class="method-btn" onclick="restartQuiz()">重新練習</button>
+                        <button class="method-btn" onclick="backToMenu()">返回選單</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 重新開始測驗
+        function restartQuiz() {
+            scores[currentQuiz] = 0;
+            currentQuestion = 0;
+            answered = false;
+            showQuestion();
+        }
+
+        // 返回選單
+        function backToMenu() {
+            const container = currentQuiz === 'challenge' ? 
+                document.getElementById('challenge-content') : 
+                document.getElementById('practice-content');
+            
+            if (currentQuiz === 'challenge') {
+                container.innerHTML = `
+                    <div class="quiz-container">
+                        <p>準備接受更高難度的挑戰嗎？</p>
+                        <button class="method-btn" onclick="startChallenge()">開始挑戰</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="quiz-container">
+                        <p>選擇你想練習的方法：</p>
+                        <div class="method-selector">
+                            <button class="method-btn" onclick="startQuiz('quadrat')">樣區法練習</button>
+                            <button class="method-btn" onclick="startQuiz('capture')">捉放法練習</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // 更新證書
+        function updateCertificate() {
+            document.getElementById('quadrat-score').textContent = scores.quadrat;
+            document.getElementById('capture-score').textContent = scores.capture;
+            document.getElementById('challenge-score').textContent = scores.challenge;
+            document.getElementById('total-score').textContent = scores.quadrat + scores.capture + scores.challenge;
+            
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日`;
+            document.getElementById('certificate-date').textContent = dateStr;
+        }
+
+        // 捕捉動畫
+        const catchKeyframes = `
+            @keyframes catch {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+            }
+        `;
+        const style = document.createElement('style');
+        style.textContent = catchKeyframes;
+        document.head.appendChild(style);
+
+        // 初始化證書日期
+        window.addEventListener('load', function() {
+            updateCertificate();
+        });
+    </script>
+</body>
+</html>
+                    
